@@ -22,4 +22,9 @@ WORKDIR /nuclio
 
 COPY go.mod go.sum ./
 
-RUN go mod download
+RUN set -ex && \
+#           go env -w GO111MODULE=on && \
+#           go env -w GOPROXY=https://goproxy.cn && \
+#           go env -w GOSUMDB=off && \
+           go env && \
+           go mod download -x

@@ -15,7 +15,7 @@
 
 ARG NUCLIO_LABEL
 
-FROM nuclio-builder:$NUCLIO_LABEL as builder
+FROM 5ibnu/nuclio:builder-$NUCLIO_LABEL as builder
 
 FROM golang:1.14.3-alpine3.11
 
@@ -25,11 +25,13 @@ ENV GOARCH=amd64
 
 COPY --from=builder $GOPATH/pkg/mod $GOPATH/pkg/mod
 
-RUN apk --update --no-cache add \
-    git \
-    gcc \
-    musl-dev \
-    file
+RUN   set -ex && \
+#             echo -e "https://mirrors.aliyun.com/alpine/v3.11/main" > /etc/apk/repositories && \
+            apk --update --no-cache add \
+            git \
+            gcc \
+            musl-dev \
+           file
 
 WORKDIR /nuclio
 

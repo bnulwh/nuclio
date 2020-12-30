@@ -17,23 +17,26 @@
 #
 ARG NUCLIO_LABEL
 
-FROM node:10.21.0 as build-static
+FROM node:10.23 as build-static
 
 # copy source tree
 COPY ./pkg/dashboard/ui /home/nuclio/dashboard/src
 
 # install gulp and bower, cd into the source dir and build to create /home/nuclio/dashboard/src/dist
 # which contains all the necessary files (index.html and assets/ dir)
-RUN npm install -g gulp \
-    && cd /home/nuclio/dashboard/src \
-    && rm -rf ./dist ./node_modules ./resources/*/node_modules \
-    && npm install --production \
-    && gulp build --production
+RUN set -ex \
+#           && npm config set registry  "http://registry.npm.taobao.org/" \
+           && npm config list \
+           && npm install -g gulp \
+           && cd /home/nuclio/dashboard/src \
+           && rm -rf ./dist ./node_modules ./resources/*/node_modules \
+            && npm install --production \
+           && gulp build --production
 
 #
 # Build binary stage: builds the dashboard binary
 #
-FROM nuclio-base:$NUCLIO_LABEL as build-binary
+FROM 5ibnu/nuclio:base-$NUCLIO_LABEL as build-binary
 
 ARG NUCLIO_GO_LINK_FLAGS_INJECT_VERSION
 
@@ -54,12 +57,13 @@ ARG DOCKER_CLI_VERSION="19.03.12"
 
 ENV DOWNLOAD_URL="https://download.docker.com/linux/static/stable/x86_64/docker-$DOCKER_CLI_VERSION.tgz"
 
-RUN apk --update --no-cache add ca-certificates git curl parallel \
+RUN set -ex\
+            &&   echo -e "https://mirrors.aliyun.com/alpine/v3.11/main" > /etc/apk/repositories \
+           &&   apk --update --no-cache add ca-certificates git curl parallel \
     && mkdir -p /tmp/download \
     && curl -L $DOWNLOAD_URL | tar -xz -C /tmp/download \
     && mv /tmp/download/docker/docker /usr/local/bin/ \
-    && rm -rf /tmp/download \
-    && apk del curl
+    && rm -rf /tmp/download 
 
 # copy runners
 COPY cmd/dashboard/docker/runners /runners

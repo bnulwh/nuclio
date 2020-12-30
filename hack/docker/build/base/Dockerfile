@@ -15,7 +15,7 @@
 
 ARG NUCLIO_LABEL
 
-FROM nuclio-builder:$NUCLIO_LABEL as builder
+FROM 5ibnu/nuclio:builder-$NUCLIO_LABEL as builder
 
 FROM golang:1.14.3
 

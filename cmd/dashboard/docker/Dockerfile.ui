@@ -4,7 +4,7 @@ FROM node:10.23 as build-static
 
 WORKDIR /home/nuclio/dashboard/src
 # copy source tree
-COPY ./pkg/dashboard/ui/package*.json .
+COPY ./pkg/dashboard/ui/package*.json ./
 
 # install gulp and bower, cd into the source dir and build to create /home/nuclio/dashboard/src/dist
 # which contains all the necessary files (index.html and assets/ dir)

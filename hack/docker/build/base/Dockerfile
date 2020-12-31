@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 
-ARG NUCLIO_LABEL
+ARG NUCLIO_LABEL=1.5.11
 
 FROM 5ibnu/nuclio:builder-$NUCLIO_LABEL as builder
 

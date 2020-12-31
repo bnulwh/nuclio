@@ -15,7 +15,7 @@
 #
 # Build assets stage: builds the dashboard assets (js, html, css, etc)
 #
-ARG NUCLIO_LABEL
+ARG NUCLIO_LABEL=1.5.11
 
 FROM node:10.23 as build-static
 
